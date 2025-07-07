@@ -12,6 +12,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Login from "./pages/Login";
 import Admin from "./pages/Admin";
+import Orders from "./Orders";
 import AdminRoute from "./AdminRoute";
 
 function App() {
@@ -76,6 +77,14 @@ function App() {
           element={
             <AdminRoute>
               <Admin />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/orders"
+          element={
+            <AdminRoute>
+              <Orders />
             </AdminRoute>
           }
         />
