@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "./firebase";
 import Home from "./pages/Home";
 import ProductPage from "./pages/ProductPage";
 import Cart from "./pages/Cart";
@@ -8,22 +10,22 @@ import Success from "./pages/Success";
 import NotFound from "./pages/NotFound";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import Login from "./pages/Login";
+import Admin from "./pages/Admin";
+import AdminRoute from "./AdminRoute";
 
 function App() {
-  const products = [
-    { id: 1, name: "Camden Hoodie", price: 90, image: "/assets/products/placeholder.jpg", description: "Oversized hoodie with London street flair." },
-    { id: 2, name: "Brixton Cargo", price: 75, image: "/assets/products/placeholder.jpg", description: "Loose-fit cargo pants for ultimate comfort." },
-    { id: 3, name: "Soho Jacket", price: 120, image: "/assets/products/placeholder.jpg", description: "Bold cropped jacket, street-ready." },
-    { id: 4, name: "Hackney Tee", price: 45, image: "/assets/products/placeholder.jpg", description: "Graphic tee inspired by Hackney vibes." },
-    { id: 5, name: "Chelsea Denim", price: 85, image: "/assets/products/placeholder.jpg", description: "Distressed denim for urban explorers." },
-    { id: 6, name: "Shoreditch Cap", price: 30, image: "/assets/products/placeholder.jpg", description: "Statement cap for city moves." },
-    { id: 7, name: "Kensington Puffer", price: 150, image: "/assets/products/placeholder.jpg", description: "Puffer jacket, cozy and edgy." },
-    { id: 8, name: "Oxford Crew", price: 65, image: "/assets/products/placeholder.jpg", description: "Classic crewneck with modern twist." },
-    { id: 9, name: "Piccadilly Scarf", price: 35, image: "/assets/products/placeholder.jpg", description: "Soft scarf, cold-weather essential." },
-    { id: 10, name: "Notting Hill Shorts", price: 55, image: "/assets/products/placeholder.jpg", description: "Loose-fit shorts for chill summer days." }
-  ];
-
+  const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const querySnapshot = await getDocs(collection(db, "products"));
+      const fetchedProducts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setProducts(fetchedProducts);
+    };
+    fetchProducts();
+  }, []);
 
   useEffect(() => {
     const saved = localStorage.getItem("cart");
@@ -68,6 +70,15 @@ function App() {
         <Route path="/checkout" element={<Checkout cart={cart} clearCart={clearCart} />} />
         <Route path="/success" element={<Success />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <Admin />
+            </AdminRoute>
+          }
+        />
       </Routes>
       <Footer />
     </>

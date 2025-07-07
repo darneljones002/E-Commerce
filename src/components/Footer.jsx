@@ -1,7 +1,7 @@
 function Footer() {
   return (
-    <footer className="py-6 text-center text-gray-500">
-      &copy; {new Date().getFullYear()} London Streetwear. All rights reserved.
+    <footer className="p-4 text-center bg-gray-200 mt-8">
+      &copy; {new Date().getFullYear()} London Street. All rights reserved.
     </footer>
   );
 }

@@ -1,11 +1,16 @@
 import { Link } from "react-router-dom";
-import MiniCart from "./MiniCart";
 
 function Header({ cart }) {
+  const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
   return (
-    <header className="flex justify-between items-center p-4 border-b shadow-sm">
-      <Link to="/" className="text-2xl font-bold">London Streetwear</Link>
-      <MiniCart cart={cart} />
+    <header className="flex justify-between items-center p-4 bg-black text-white">
+      <Link to="/" className="text-xl font-bold">London Street</Link>
+      <nav>
+        <Link to="/cart" className="ml-4">
+          Cart ({itemCount})
+        </Link>
+      </nav>
     </header>
   );
 }

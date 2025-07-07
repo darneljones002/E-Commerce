@@ -1,8 +1,13 @@
+import { Link } from "react-router-dom";
+
 function Success() {
   return (
-    <section className="py-20 text-center">
-      <h2 className="text-4xl font-bold mb-4">🎉 Thank you!</h2>
-      <p className="text-lg">Your order has been placed successfully.</p>
+    <section className="p-8 text-center">
+      <h1 className="text-3xl font-bold mb-4">Thank you for your order!</h1>
+      <p className="mb-6">Your London street fashion pieces are on the way.</p>
+      <Link to="/" className="bg-black text-white px-6 py-2 rounded hover:bg-gray-800">
+        Continue Shopping
+      </Link>
     </section>
   );
 }
