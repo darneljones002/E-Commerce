@@ -20,12 +20,23 @@ function App() {
   const [cart, setCart] = useState([]);
 
   useEffect(() => {
+    let isMounted = true;
+
     const fetchProducts = async () => {
-      const querySnapshot = await getDocs(collection(db, "products"));
-      const fetchedProducts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setProducts(fetchedProducts);
+      try {
+        const querySnapshot = await getDocs(collection(db, "products"));
+        const fetchedProducts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        if (isMounted) setProducts(fetchedProducts);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
     };
+
     fetchProducts();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -76,15 +87,10 @@ function App() {
           path="/admin"
           element={
             <AdminRoute>
-              <Admin />
-            </AdminRoute>
-          }
-        />
-        <Route
-          path="/admin/orders"
-          element={
-            <AdminRoute>
-              <Orders />
+              <div>
+                <Orders />
+                <Admin />
+              </div>
             </AdminRoute>
           }
         />

@@ -1,42 +1,49 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
 function Checkout({ cart, clearCart }) {
   const [form, setForm] = useState({ name: "", email: "", address: "" });
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
-
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    if (!form.name || !form.email || !form.address) return alert("Please fill out all fields.");
 
-    const order = {
+    await addDoc(collection(db, "orders"), {
       ...form,
       items: cart,
-      createdAt: serverTimestamp(),
-      total: cart.reduce((sum, item) => sum + item.price * item.quantity, 0),
-    };
+      createdAt: new Date(),
+    });
 
-    await addDoc(collection(db, "orders"), order);
     clearCart();
-    setLoading(false);
     navigate("/success");
   };
 
   return (
     <section className="p-6 max-w-3xl mx-auto">
-      <h2 className="text-3xl font-bold mb-6">Checkout</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input name="name" placeholder="Name" onChange={handleChange} value={form.name} required className="w-full p-2 border" />
-        <input name="email" placeholder="Email" onChange={handleChange} value={form.email} required className="w-full p-2 border" />
-        <textarea name="address" placeholder="Address" onChange={handleChange} value={form.address} required className="w-full p-2 border" />
-        <button type="submit" disabled={loading} className="bg-black text-white px-6 py-3 rounded">
-          {loading ? "Placing Order..." : "Place Order"}
-        </button>
+      <h2 className="text-2xl font-bold mb-4">Checkout</h2>
+      <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
+        <input
+          placeholder="Name"
+          value={form.name}
+          onChange={(e) => setForm({ ...form, name: e.target.value })}
+          className="border p-2"
+        />
+        <input
+          placeholder="Email"
+          value={form.email}
+          onChange={(e) => setForm({ ...form, email: e.target.value })}
+          className="border p-2"
+        />
+        <textarea
+          placeholder="Address"
+          value={form.address}
+          onChange={(e) => setForm({ ...form, address: e.target.value })}
+          className="border p-2"
+        />
+        <button type="submit" className="bg-black text-white px-4 py-2">Place Order</button>
       </form>
     </section>
   );
