@@ -4,7 +4,7 @@ function ProductPage({ products, addToCart }) {
   const { id } = useParams();
   const product = products.find(p => p.id === id);
 
-  const placeholderImage = "https://via.placeholder.com/300";
+  const placeholderImage = "https://firebasestorage.googleapis.com/v0/b/e-commerce-203c7.firebasestorage.app/o/products%2Fplaceholder%20copy.jpg?alt=media&token=db9170c9-39f0-4513-8438-e62fb44aa30d";
   const displayImage = product?.image || placeholderImage;
 
   if (!product) {

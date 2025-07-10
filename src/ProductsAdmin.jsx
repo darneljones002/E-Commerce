@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { collection, getDocs, addDoc, deleteDoc, doc } from "firebase/firestore";
-import { db } from "../firebase";
+import { db } from "./firebase";
 
 function ProductsAdmin() {
   const [products, setProducts] = useState([]);
@@ -22,11 +22,9 @@ function ProductsAdmin() {
     setLoading(false);
   }, [productsRef]);
 
-  useEffect(() => {
-    let isMounted = true;
-    fetchProducts();
-    return () => { isMounted = false; };
-  }, [fetchProducts]);
+ useEffect(() => {
+  fetchProducts();
+}, [fetchProducts]);
 
   const handleAdd = async () => {
     if (!newProduct.name || !newProduct.price) return;
